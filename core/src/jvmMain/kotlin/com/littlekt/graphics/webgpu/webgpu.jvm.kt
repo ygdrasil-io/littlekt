@@ -85,7 +85,7 @@ actual class Device(val segment: MemorySegment) : Releasable {
 
             WGPUChainedStruct.next(wgslChain, WGPU_NULL)
             WGPUChainedStruct.sType(wgslChain, WGPUSType_ShaderModuleWGSLDescriptor())
-            WGPUShaderModuleWGSLDescriptor.code(wgsl, scope.allocateUtf8String(src))
+            WGPUShaderModuleWGSLDescriptor.code(wgsl, scope.allocateFrom(src))
             WGPUShaderModuleDescriptor.nextInChain(desc, wgslChain)
             ShaderModule(wgpuDeviceCreateShaderModule(segment, desc))
         }
@@ -566,7 +566,7 @@ actual class Adapter(var segment: MemorySegment) : Releasable {
                             output.update { device }
                         } else {
                             logger.log(Logger.Level.ERROR) {
-                                "requestDevice status=$status, message=${message.getUtf8String(0)}"
+                                "requestDevice status=$status, message=${message.getString(0)}"
                             }
                         }
                     },
@@ -578,7 +578,7 @@ actual class Adapter(var segment: MemorySegment) : Releasable {
             if (descriptor != null) {
                 descriptor.label?.let { WGPUDeviceDescriptor.label(desc, it.toNativeString(scope)) }
                 descriptor.requiredFeatures?.let {
-                    val nativeArray = scope.allocateArray(ValueLayout.JAVA_INT, it.size.toLong())
+                    val nativeArray = scope.allocate(ValueLayout.JAVA_INT, it.size.toLong())
                     it.forEachIndexed { index, jvmEntry ->
                         val nativeEntry = nativeArray.asSlice((Int.SIZE_BYTES * index).toLong())
 
@@ -785,7 +785,7 @@ actual class Queue(val segment: MemorySegment) : Releasable {
             wgpuQueueWriteTexture(
                 segment,
                 destination.toNative(scope),
-                scope.allocateArray(ValueLayout.JAVA_BYTE, *data),
+                scope.allocateFrom(ValueLayout.JAVA_BYTE, *data),
                 size,
                 layout.toNative(scope),
                 copySize.toNative(scope)

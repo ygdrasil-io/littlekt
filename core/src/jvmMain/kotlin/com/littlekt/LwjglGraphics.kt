@@ -80,7 +80,7 @@ class LwjglGraphics(private val context: LwjglContext) : Graphics, Releasable {
                             output.update { adapter }
                         } else {
                             logger.error {
-                                "requestAdapter status=$status, message=${message.getUtf8String(0)}"
+                                "requestAdapter status=$status, message=${message.getString(0)}"
                             }
                         }
                     },

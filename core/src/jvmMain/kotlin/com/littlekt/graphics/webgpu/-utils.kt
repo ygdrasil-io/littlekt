@@ -40,9 +40,9 @@ internal fun <T> Collection<T>.mapToNativeEntries(
 internal val WGPU_NULL: MemorySegment = WGPU.NULL()
 
 internal fun List<MemorySegment>.toNativeArray(scope: SegmentAllocator) =
-    scope.allocateArray(ValueLayout.JAVA_LONG, *map { it.address() }.toLongArray())
+    scope.allocateFrom(ValueLayout.JAVA_LONG, *map { it.address() }.toLongArray())
 
-internal fun String.toNativeString(scope: SegmentAllocator) = scope.allocateUtf8String(this)
+internal fun String.toNativeString(scope: SegmentAllocator) = scope.allocateFrom(this)
 
 internal fun Boolean.toInt() = if (this) 1 else 0
 

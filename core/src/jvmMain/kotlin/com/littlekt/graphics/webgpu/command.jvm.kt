@@ -288,7 +288,7 @@ actual class RenderPassEncoder(val segment: MemorySegment, actual val label: Str
         if (dynamicOffsets.isNotEmpty()) {
             Arena.ofConfined().use { scope ->
                 val offsets =
-                    scope.allocateArray(ValueLayout.JAVA_LONG, *dynamicOffsets.toLongArray())
+                    scope.allocateFrom(ValueLayout.JAVA_LONG, *dynamicOffsets.toLongArray())
                 wgpuRenderPassEncoderSetBindGroup(
                     segment,
                     index,

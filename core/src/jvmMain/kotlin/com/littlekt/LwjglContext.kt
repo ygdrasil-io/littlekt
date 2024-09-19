@@ -211,7 +211,7 @@ class LwjglContext(override val configuration: JvmConfiguration) : Context() {
     private fun initLogging() {
         val callback =
             WGPULogCallback.Function { level, message, _ ->
-                val messageJvm = message.getUtf8String(0)
+                val messageJvm = message.getString(0)
                 val logLevel =
                     when (level) {
                         WGPULogLevel_Error() -> Logger.Level.ERROR
