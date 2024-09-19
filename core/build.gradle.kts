@@ -38,6 +38,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(libs.wgpu4k)
                 implementation(libs.kotlinx.atomicfu)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.serialization.json)
@@ -85,16 +86,17 @@ kotlin {
 
         all {
             languageSettings.apply {
-                progressiveMode = true
                 optIn("kotlin.contracts.ExperimentalContracts")
                 optIn("kotlin.time.ExperimentalTime")
             }
         }
 
-        targets.configureEach {
-            compilations.configureEach {
-                compilerOptions.configure { freeCompilerArgs.add("-Xexpect-actual-classes") }
-            }
-        }
+    }
+
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    compilerOptions {
+        allWarningsAsErrors = true
+        progressiveMode = true
+        freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 }
