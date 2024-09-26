@@ -29,22 +29,6 @@ actual class CommandEncoder(val delegate: GPUCommandEncoder) : Releasable {
         return ComputePassEncoder(delegate.beginComputePass(GPUObjectBase { this.label = label }))
     }
 
-    actual fun copyBufferToBuffer(
-        source: GPUBuffer,
-        destination: GPUBuffer,
-        sourceOffset: Int,
-        destinationOffset: Int,
-        size: Long
-    ) {
-        delegate.copyBufferToBuffer(
-            source.delegate,
-            sourceOffset,
-            destination.delegate,
-            destinationOffset,
-            size
-        )
-    }
-
     actual fun copyTextureToBuffer(source: TextureCopyView, dest: BufferCopyView, size: Extent3D) {
         delegate.copyTextureToBuffer(source.toNative(), dest.toNative(), size.toNative())
     }
@@ -52,18 +36,10 @@ actual class CommandEncoder(val delegate: GPUCommandEncoder) : Releasable {
     actual override fun release() {}
 }
 
-actual class RenderPipeline(val delegate: GPURenderPipeline) : Releasable {
-    actual override fun release() {}
-}
-
 actual class RenderPassEncoder(
     val delegate: GPURenderPassEncoder,
     actual val label: String? = null
 ) : Releasable {
-
-    actual fun setPipeline(pipeline: RenderPipeline) {
-        delegate.setPipeline(pipeline.delegate)
-    }
 
     actual fun draw(vertexCount: Int, instanceCount: Int, firstVertex: Int, firstInstance: Int) {
         EngineStats.drawCalls++
@@ -100,21 +76,6 @@ actual class RenderPassEncoder(
         delegate.setIndexBuffer(buffer.delegate, indexFormat.nativeVal, offset, size)
     }
 
-    actual fun setBindGroup(index: Int, bindGroup: BindGroup, dynamicOffsets: List<Long>) {
-        delegate.setBindGroup(index, bindGroup.delegate, dynamicOffsets.toLongArray())
-    }
-
-    actual fun setViewport(
-        x: Int,
-        y: Int,
-        width: Int,
-        height: Int,
-        minDepth: Float,
-        maxDepth: Float
-    ) {
-        delegate.setViewport(x, y, width, height, minDepth, maxDepth)
-    }
-
     actual fun setScissorRect(x: Int, y: Int, width: Int, height: Int) {
         delegate.setScissorRect(x, y, width, height)
     }
@@ -126,18 +87,11 @@ actual class RenderPassEncoder(
     }
 }
 
-actual class ComputePipeline(val delegate: GPUComputePipeline) : Releasable {
+actual class ComputePipeline : Releasable {
     actual override fun release() = Unit
 }
 
 actual class ComputePassEncoder(val delegate: GPUComputePassEncoder) : Releasable {
-    actual fun setPipeline(pipeline: ComputePipeline) {
-        delegate.setPipeline(pipeline.delegate)
-    }
-
-    actual fun setBindGroup(index: Int, bindGroup: BindGroup) {
-        delegate.setBindGroup(index, bindGroup.delegate)
-    }
 
     actual fun dispatchWorkgroups(
         workgroupCountX: Int,
@@ -145,10 +99,6 @@ actual class ComputePassEncoder(val delegate: GPUComputePassEncoder) : Releasabl
         workgroupCountZ: Int
     ) {
         delegate.dispatchWorkgroups(workgroupCountX, workgroupCountY, workgroupCountZ)
-    }
-
-    actual fun end() {
-        delegate.end()
     }
 
     actual override fun release() = Unit
