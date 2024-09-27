@@ -49,8 +49,6 @@ kotlin {
         //noinspection UseTomlInstead
         val jvmMain by getting {
             dependencies {
-                implementation(project(":wgpu-ffm"))
-                implementation(project(":wgpu-natives"))
 
                 implementation(libs.mp3.decoder)
 

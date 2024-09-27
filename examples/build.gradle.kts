@@ -44,7 +44,11 @@ kotlin {
                 }
                 if (Os.isFamily(Os.FAMILY_MAC)) {
                     register<JavaExec>("jvmRun") {
-                        jvmArgs("-XstartOnFirstThread")
+                        jvmArgs(
+                            "-XstartOnFirstThread",
+                            "--add-opens=java.base/java.lang=ALL-UNNAMED",
+                            "--enable-native-access=ALL-UNNAMED"
+                        )
                         mainClass.set(mainClassName)
                         kotlin {
                             val mainCompile = targets["jvm"].compilations["main"]
@@ -67,8 +71,8 @@ kotlin {
             commonWebpackConfig {
                 devServer =
                     (devServer
-                            ?: org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
-                                .DevServer())
+                        ?: org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+                            .DevServer())
                         .copy(
                             open = mapOf("app" to mapOf("name" to "chrome")),
                         )
